@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>딥디바 — 비우고, 채우는 이중 수분 시스템</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: #0a0e1a;
+      color: #e8edf5;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── Variables ─────────────────────────────────────── */
+    :root {
+      --navy:   #0a0e1a;
+      --navy2:  #0f1528;
+      --navy3:  #141c35;
+      --blue:   #3a7bd5;
+      --blue2:  #5b9cf6;
+      --blue3:  #b8d4ff;
+      --cream:  #f5f0e8;
+      --cream2: #ede6d8;
+      --white:  #ffffff;
+      --gold:   #c8a96e;
+      --text:   #c8d4e8;
+    }
+
+    /* ─── Typography ────────────────────────────────────── */
+    h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── Layout ────────────────────────────────────────── */
+    section { padding: 6rem 1.5rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .center { text-align: center; }
+
+    /* ─── Divider ───────────────────────────────────────── */
+    .divider {
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--blue3));
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .divider.left { margin-left: 0; }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  1. HERO                                             */
+    /* ════════════════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(58,123,213,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 20% 40%, rgba(58,123,213,0.10) 0%, transparent 60%),
+        var(--navy);
+      text-align: center;
+      padding: 5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%233a7bd5' fill-opacity='0.06'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-products {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 3rem auto 3.5rem;
+    }
+    .product-bottle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    /* SVG 병 일러스트 */
+    .bottle-svg { filter: drop-shadow(0 12px 40px rgba(58,123,213,0.35)); }
+    .bottle-label-tag {
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+    .blue-tag  { color: var(--blue2); }
+    .white-tag { color: var(--cream2); }
+
+    #hero h1 {
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      line-height: 1.25;
+      background: linear-gradient(135deg, var(--white) 0%, var(--blue3) 60%, var(--blue2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.4rem;
+    }
+    #hero p.sub {
+      font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+      color: var(--text);
+      max-width: 520px;
+      margin: 0 auto 2.8rem;
+    }
+    .btn-cta {
+      display: inline-block;
+      padding: 1rem 2.8rem;
+      background: linear-gradient(135deg, var(--blue) 0%, #2860b8 100%);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      box-shadow: 0 8px 30px rgba(58,123,213,0.40);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(58,123,213,0.55);
+    }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  2. INTRO QUOTE                                      */
+    /* ════════════════════════════════════════════════════ */
+    #intro {
+      background: var(--navy2);
+      border-top: 1px solid rgba(58,123,213,0.15);
+      border-bottom: 1px solid rgba(58,123,213,0.15);
+    }
+    .quote-block {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .quote-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+      color: rgba(58,123,213,0.3);
+      font-family: Georgia, serif;
+      margin-bottom: 0.5rem;
+    }
+    .quote-block blockquote {
+      font-size: clamp(1.15rem, 3vw, 1.55rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.55;
+      margin-bottom: 1.4rem;
+    }
+    .quote-block p {
+      color: var(--text);
+      font-size: 0.97rem;
+    }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  3. PRODUCT CARDS                                    */
+    /* ════════════════════════════════════════════════════ */
+    #products { background: var(--navy); }
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3.5rem;
+    }
+    @media (max-width: 640px) { .product-grid { grid-template-columns: 1fr; } }
+
+    .card {
+      border-radius: 20px;
+      padding: 2.4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .card-blue {
+      --accent-from: #3a7bd5;
+      --accent-to: #b8d4ff;
+      background: linear-gradient(145deg, rgba(58,123,213,0.12) 0%, rgba(10,14,26,0.95) 60%);
+    }
+    .card-white {
+      --accent-from: #c8c0b0;
+      --accent-to: #f5f0e8;
+      background: linear-gradient(145deg, rgba(245,240,232,0.08) 0%, rgba(10,14,26,0.95) 60%);
+    }
+
+    .card-step {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.2rem;
+    }
+    .card-blue .card-step { background: rgba(58,123,213,0.2); color: var(--blue2); }
+    .card-white .card-step { background: rgba(245,240,232,0.12); color: var(--cream2); }
+
+    .card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 0.4rem;
+      color: var(--white);
+    }
+    .card .card-nature {
+      font-size: 0.82rem;
+      margin-bottom: 1.4rem;
+    }
+    .card-blue .card-nature  { color: var(--blue3); }
+    .card-white .card-nature { color: var(--cream2); }
+
+    .card-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .card-features li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding-left: 1.4rem;
+      position: relative;
+    }
+    .card-features li::before {
+      content: '·';
+      position: absolute;
+      left: 0.4rem;
+      color: var(--blue2);
+      font-weight: 700;
+    }
+    .card-white .card-features li::before { color: var(--gold); }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  4. HOW TO USE                                       */
+    /* ════════════════════════════════════════════════════ */
+    #howtouse { background: var(--navy3); }
+    .steps-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+      flex-wrap: wrap;
+    }
+    .step-box {
+      flex: 1;
+      min-width: 220px;
+      max-width: 340px;
+      border-radius: 16px;
+      padding: 2rem 1.8rem;
+      text-align: center;
+    }
+    .step-box.s1 { background: rgba(58,123,213,0.12); border: 1px solid rgba(58,123,213,0.3); }
+    .step-box.s2 { background: rgba(245,240,232,0.06); border: 1px solid rgba(245,240,232,0.18); }
+
+    .step-num {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .s1 .step-num { color: var(--blue2); }
+    .s2 .step-num { color: var(--gold); }
+
+    .step-box h3 { font-size: 1.25rem; color: var(--white); margin-bottom: 0.6rem; }
+    .step-box p  { font-size: 0.9rem; color: var(--text); }
+
+    .step-arrow {
+      font-size: 1.8rem;
+      color: rgba(58,123,213,0.5);
+      flex-shrink: 0;
+    }
+
+    .warning-box {
+      margin: 3rem auto 0;
+      max-width: 600px;
+      background: rgba(200,169,110,0.08);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: 12px;
+      padding: 1.2rem 1.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+    .warning-box .wi { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .warning-box p { font-size: 0.9rem; color: #e8d9b5; line-height: 1.6; }
+    .warning-box strong { color: var(--gold); }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  5. HYDRATION STAGES                                 */
+    /* ════════════════════════════════════════════════════ */
+    #stages { background: var(--navy); }
+    .stages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    @media (max-width: 640px) { .stages-grid { grid-template-columns: 1fr; } }
+
+    .stage-card {
+      border-radius: 16px;
+      padding: 2rem 1.6rem;
+      position: relative;
+    }
+    .stage-card:nth-child(1) { background: linear-gradient(145deg, rgba(58,123,213,0.08), rgba(10,14,26,0.9)); border: 1px solid rgba(58,123,213,0.22); }
+    .stage-card:nth-child(2) { background: linear-gradient(145deg, rgba(91,156,246,0.10), rgba(10,14,26,0.9)); border: 1px solid rgba(91,156,246,0.28); }
+    .stage-card:nth-child(3) { background: linear-gradient(145deg, rgba(184,212,255,0.08), rgba(10,14,26,0.9)); border: 1px solid rgba(184,212,255,0.22); }
+
+    .stage-num {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.6rem;
+      opacity: 0.18;
+      color: var(--blue2);
+    }
+    .stage-card h3 { font-size: 1.05rem; color: var(--white); margin-bottom: 0.7rem; }
+    .stage-card .symptoms {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .stage-solution {
+      font-size: 0.82rem;
+      color: var(--blue3);
+      border-top: 1px solid rgba(58,123,213,0.2);
+      padding-top: 0.8rem;
+      font-style: italic;
+    }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  6. MINERAL                                          */
+    /* ════════════════════════════════════════════════════ */
+    #mineral { background: var(--navy2); }
+    .mineral-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    @media (max-width: 580px) { .mineral-grid { grid-template-columns: 1fr; } }
+
+    .mineral-card {
+      background: var(--navy3);
+      border: 1px solid rgba(58,123,213,0.18);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .mineral-symbol {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, #1a3a70 100%);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 6px 24px rgba(58,123,213,0.35);
+    }
+    .mineral-card h3 { font-size: 1rem; color: var(--white); margin-bottom: 0.5rem; }
+    .mineral-card p  { font-size: 0.88rem; color: var(--text); }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  7. PRO BADGE                                        */
+    /* ════════════════════════════════════════════════════ */
+    #pro { background: var(--navy3); }
+    .pro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    @media (max-width: 480px) { .pro-grid { grid-template-columns: 1fr; } }
+
+    .pro-card {
+      background: rgba(58,123,213,0.07);
+      border: 1px solid rgba(58,123,213,0.2);
+      border-radius: 14px;
+      padding: 1.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .pro-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(58,123,213,0.25), rgba(58,123,213,0.08));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .pro-card h4 { font-size: 1rem; color: var(--white); margin-bottom: 0.35rem; }
+    .pro-card p  { font-size: 0.85rem; color: var(--text); line-height: 1.55; }
+
+    /* ════════════════════════════════════════════════════ */
+    /*  8. CTA                                              */
+    /* ════════════════════════════════════════════════════ */
+    #cta {
+      background:
+        radial-gradient(ellipse 70% 80% at 50% 100%, rgba(58,123,213,0.22) 0%, transparent 65%),
+        var(--navy);
+      text-align: center;
+      padding: 7rem 1.5rem;
+    }
+    #cta h2 {
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    #cta p {
+      color: var(--text);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+    }
+    .btn-cta-large {
+      display: inline-block;
+      padding: 1.15rem 3.5rem;
+      background: linear-gradient(135deg, #3a7bd5 0%, #2255a8 100%);
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-radius: 60px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      box-shadow: 0 10px 40px rgba(58,123,213,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta-large:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 50px rgba(58,123,213,0.60);
+    }
+    .cta-note {
+      margin-top: 1.4rem;
+      font-size: 0.82rem;
+      color: rgba(200,212,232,0.5);
+    }
+
+    /* ─── Footer ─────────────────────────────────────── */
+    footer {
+      background: #07090f;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: 0.8rem;
+      color: rgba(200,212,232,0.3);
+      border-top: 1px solid rgba(58,123,213,0.1);
+    }
+
+    /* ─── Fade-in animation ──────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     1. HERO
+══════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="container">
+    <div class="section-label fade-in">Deep Diva · Hydration System</div>
+
+    <!-- 병 일러스트 -->
+    <div class="hero-products fade-in">
+      <!-- 파랑이 -->
+      <div class="product-bottle">
+        <svg class="bottle-svg" width="90" height="220" viewBox="0 0 90 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3a7bd5"/>
+              <stop offset="100%" stop-color="#1a3a70"/>
+            </linearGradient>
+            <linearGradient id="shine1" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- 캡 -->
+          <rect x="32" y="6" width="26" height="18" rx="6" fill="#2255a8"/>
+          <!-- 목 -->
+          <rect x="36" y="22" width="18" height="16" rx="3" fill="#2a5cb8"/>
+          <!-- 바디 -->
+          <rect x="14" y="36" width="62" height="162" rx="14" fill="url(#bg1)"/>
+          <!-- 광택 -->
+          <rect x="18" y="40" width="16" height="154" rx="8" fill="url(#shine1)"/>
+          <!-- 라벨 -->
+          <rect x="20" y="76" width="50" height="80" rx="8" fill="rgba(255,255,255,0.08)"/>
+          <text x="45" y="106" text-anchor="middle" fill="#b8d4ff" font-size="7.5" font-family="sans-serif" font-weight="700" letter-spacing="1">DEEP DIVA</text>
+          <text x="45" y="120" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif">CLEAR</text>
+          <text x="45" y="132" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif">HYDRATION</text>
+          <text x="45" y="144" text-anchor="middle" fill="#b8d4ff" font-size="8" font-family="sans-serif" font-weight="800">01</text>
+        </svg>
+        <span class="bottle-label-tag blue-tag">파랑이</span>
+      </div>
+
+      <!-- 하양이 -->
+      <div class="product-bottle">
+        <svg class="bottle-svg" width="90" height="220" viewBox="0 0 90 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ddd8cc"/>
+              <stop offset="100%" stop-color="#b0a898"/>
+            </linearGradient>
+            <linearGradient id="shine2" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect x="32" y="6" width="26" height="18" rx="6" fill="#9e9588"/>
+          <rect x="36" y="22" width="18" height="16" rx="3" fill="#c0b8aa"/>
+          <rect x="14" y="36" width="62" height="162" rx="14" fill="url(#bg2)"/>
+          <rect x="18" y="40" width="16" height="154" rx="8" fill="url(#shine2)"/>
+          <rect x="20" y="76" width="50" height="80" rx="8" fill="rgba(10,14,26,0.10)"/>
+          <text x="45" y="106" text-anchor="middle" fill="#0a0e1a" font-size="7.5" font-family="sans-serif" font-weight="700" letter-spacing="1">DEEP DIVA</text>
+          <text x="45" y="120" text-anchor="middle" fill="#1a1a2e" font-size="6" font-family="sans-serif">MOISTURE</text>
+          <text x="45" y="132" text-anchor="middle" fill="#1a1a2e" font-size="6" font-family="sans-serif">HYDRATION</text>
+          <text x="45" y="144" text-anchor="middle" fill="#0a0e1a" font-size="8" font-family="sans-serif" font-weight="800">02</text>
+        </svg>
+        <span class="bottle-label-tag white-tag">하양이</span>
+      </div>
+    </div>
+
+    <h1 class="fade-in">비우고, 채우는<br>이중 수분 시스템</h1>
+    <p class="sub fade-in">
+      피부 세포에 수분이 부족하면<br>화장품이 제 역할을 할 수 없습니다
+    </p>
+    <a href="https://smartstore.naver.com/divamoon/products/5132147889"
+       class="btn-cta fade-in" target="_blank" rel="noopener">
+      지금 구매하러 가기
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     2. INTRO QUOTE
+══════════════════════════════════════════════ -->
+<section id="intro">
+  <div class="container">
+    <div class="quote-block fade-in">
+      <div class="section-label center">Brand Philosophy</div>
+      <div class="quote-icon">"</div>
+      <blockquote>
+        수분 부족은 단계적으로 진행됩니다.<br>
+        한 번에 해결되지 않는 이유가 있습니다.
+      </blockquote>
+      <div class="divider"></div>
+      <p>
+        에스테틱 현장에서 수천 명의 피부를 관찰한 끝에 발견한 인사이트—<br>
+        피부 고민의 뿌리는 대부분 <strong style="color:var(--blue3)">세포 단위의 수분 고갈</strong>에 있었습니다.<br>
+        딥디바는 그 해답으로 이온수 이중 케어 시스템을 설계했습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     3. PRODUCT CARDS
+══════════════════════════════════════════════ -->
+<section id="products">
+  <div class="container">
+    <div class="section-label center fade-in">Product Detail</div>
+    <h2 class="center fade-in" style="font-size:clamp(1.5rem,4vw,2.2rem); color:var(--white); margin-bottom:0.5rem;">
+      두 가지, 하나의 완성
+    </h2>
+    <p class="center fade-in" style="color:var(--text); font-size:0.95rem;">
+      파랑이와 하양이는 순서대로 써야 비로소 시너지를 냅니다
+    </p>
+    <div class="divider fade-in"></div>
+
+    <div class="product-grid">
+      <!-- 파랑이 카드 -->
+      <div class="card card-blue fade-in">
+        <span class="card-step">STEP 1</span>
+        <h3>딥디바 파랑이</h3>
+        <p style="font-size:0.75rem; letter-spacing:0.1em; color:var(--blue3); margin-bottom:0.3rem;">CLEAR HYDRATION 01</p>
+        <p class="card-nature">약알칼리 이온수 · pH 7.5~8.5</p>
+        <ul class="card-features">
+          <li>피지·노폐물·각질 잔여물을 이온 흡착으로 정돈</li>
+          <li>피부 표면을 리셋해 다음 단계 흡수력 극대화</li>
+          <li>알칼리 환경으로 모공 수렴 효과</li>
+          <li>민감성 피부도 사용 가능한 무자극 배합</li>
+        </ul>
+      </div>
+
+      <!-- 하양이 카드 -->
+      <div class="card card-white fade-in">
+        <span class="card-step">STEP 2</span>
+        <h3>딥디바 하양이</h3>
+        <p style="font-size:0.75rem; letter-spacing:0.1em; color:var(--cream2); margin-bottom:0.3rem;">MOISTURE HYDRATION 02</p>
+        <p class="card-nature">약산성 이온수 · pH 5.5~6.5</p>
+        <ul class="card-features">
+          <li>피부 본래의 약산성 밸런스로 복원</li>
+          <li>이온수로 세포 깊숙이 수분 진정 공급</li>
+          <li>속건조·붓기·성인트러블 케어</li>
+          <li>피부 장벽 강화로 수분 증발 차단</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     4. HOW TO USE
+══════════════════════════════════════════════ -->
+<section id="howtouse">
+  <div class="container">
+    <div class="section-label center fade-in">How To Use</div>
+    <h2 class="center fade-in" style="font-size:clamp(1.5rem,4vw,2.2rem); color:var(--white); margin-bottom:0.4rem;">
+      올바른 사용 순서
+    </h2>
+    <p class="center fade-in" style="color:var(--text); font-size:0.95rem;">
+      순서와 방법을 지켜야 효과가 완성됩니다
+    </p>
+    <div class="divider fade-in"></div>
+
+    <div class="steps-row fade-in">
+      <div class="step-box s1">
+        <div class="step-num">STEP 01</div>
+        <h3>파랑이</h3>
+        <p>세안 후 별도의 솜에 파랑이를 적셔<br>피부결 방향으로 가볍게 닦아냅니다</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box s2">
+        <div class="step-num">STEP 02</div>
+        <h3>하양이</h3>
+        <p>새 솜에 하양이를 충분히 적셔<br>피부에 톡톡 두드리며 흡수시킵니다</p>
+      </div>
+    </div>
+
+    <div class="warning-box fade-in">
+      <span class="wi">⚠️</span>
+      <p>
+        <strong>반드시 솜을 분리해 사용하세요.</strong><br>
+        파랑이(약알칼리)와 하양이(약산성)를 같은 솜에 섞으면 이온 성분이 중화되어
+        두 제품의 핵심 효능이 상쇄됩니다. 각각 별도의 솜을 사용하는 것이 필수입니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     5. HYDRATION STAGES
+══════════════════════════════════════════════ -->
+<section id="stages">
+  <div class="container">
+    <div class="section-label center fade-in">Hydration Stage</div>
+    <h2 class="center fade-in" style="font-size:clamp(1.5rem,4vw,2.2rem); color:var(--white); margin-bottom:0.4rem;">
+      수분 부족 3단계 시스템
+    </h2>
+    <p class="center fade-in" style="color:var(--text); font-size:0.95rem;">
+      당신의 피부는 지금 몇 단계인가요?
+    </p>
+    <div class="divider fade-in"></div>
+
+    <div class="stages-grid">
+      <div class="stage-card fade-in">
+        <div class="stage-num">1</div>
+        <h3>에너지 정체 단계</h3>
+        <p class="symptoms">
+          · 세안 후 당김이 느껴진다<br>
+          · 로션을 발라도 금세 건조해진다<br>
+          · 피부가 칙칙하고 윤기가 없다
+        </p>
+        <p class="stage-solution">미네랄 이온수로 세포 에너지 회복 필요</p>
+      </div>
+      <div class="stage-card fade-in">
+        <div class="stage-num">2</div>
+        <h3>배출 정체 단계</h3>
+        <p class="symptoms">
+          · 아침에 얼굴이 붓는다<br>
+          · 모공이 넓어 보이고 각질이 올라온다<br>
+          · 피지가 과하게 분비된다
+        </p>
+        <p class="stage-solution">알칼리 이온수로 피지·노폐물 정돈 + 밸런스 회복</p>
+      </div>
+      <div class="stage-card fade-in">
+        <div class="stage-num">3</div>
+        <h3>만성 탈수 단계</h3>
+        <p class="symptoms">
+          · 트러블이 반복적으로 난다<br>
+          · 화장품을 바꿔도 효과가 없다<br>
+          · 피부 결이 고르지 않다
+        </p>
+        <p class="stage-solution">이중 이온수 케어로 세포 수분 사이클 재건</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     6. MINERAL
+══════════════════════════════════════════════ -->
+<section id="mineral">
+  <div class="container">
+    <div class="section-label center fade-in">Key Ingredients</div>
+    <h2 class="center fade-in" style="font-size:clamp(1.5rem,4vw,2.2rem); color:var(--white); margin-bottom:0.4rem;">
+      핵심 미네랄 3종
+    </h2>
+    <p class="center fade-in" style="color:var(--text); font-size:0.95rem;">
+      자연에서 가져온 이온 미네랄이 피부에 직접 작용합니다
+    </p>
+    <div class="divider fade-in"></div>
+
+    <div class="mineral-grid">
+      <div class="mineral-card fade-in">
+        <div class="mineral-symbol">K</div>
+        <h3>칼륨</h3>
+        <p>세포 내외 수분 균형 조절<br>피부 탄력 유지의 핵심 전해질</p>
+      </div>
+      <div class="mineral-card fade-in">
+        <div class="mineral-symbol">Ca</div>
+        <h3>칼슘</h3>
+        <p>피부 장벽 강화 및 재생 촉진<br>외부 자극 차단 방어막 형성</p>
+      </div>
+      <div class="mineral-card fade-in">
+        <div class="mineral-symbol">Mg</div>
+        <h3>마그네슘</h3>
+        <p>예민 피부 즉각 안정화<br>염증 완화 및 피부 진정 효과</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     7. PRO BADGE
+══════════════════════════════════════════════ -->
+<section id="pro">
+  <div class="container">
+    <div class="section-label center fade-in">Professional Use</div>
+    <h2 class="center fade-in" style="font-size:clamp(1.5rem,4vw,2.2rem); color:var(--white); margin-bottom:0.4rem;">
+      에스테틱 전문가가 선택한 이유
+    </h2>
+    <p class="center fade-in" style="color:var(--text); font-size:0.95rem;">
+      피부과 · 에스테틱 현장에서 검증된 포뮬러
+    </p>
+    <div class="divider fade-in"></div>
+
+    <div class="pro-grid">
+      <div class="pro-card fade-in">
+        <div class="pro-icon">🔬</div>
+        <div>
+          <h4>데미지케어 시너지</h4>
+          <p>손상된 피부 장벽 회복을 위한 기초 케어로 활용, 트리트먼트 흡수 효율을 높입니다</p>
+        </div>
+      </div>
+      <div class="pro-card fade-in">
+        <div class="pro-icon">💧</div>
+        <div>
+          <h4>앰플 흡수 부스터</h4>
+          <p>파랑이로 피부 표면을 정돈한 뒤 앰플을 도포하면 유효 성분 침투 속도가 향상됩니다</p>
+        </div>
+      </div>
+      <div class="pro-card fade-in">
+        <div class="pro-icon">🌿</div>
+        <div>
+          <h4>예민 피부 수분 베이스</h4>
+          <p>자극 없는 이온수 배합으로 예민성·아토피성 피부의 기초 수분 케어에 적합합니다</p>
+        </div>
+      </div>
+      <div class="pro-card fade-in">
+        <div class="pro-icon">✨</div>
+        <div>
+          <h4>에스테틱 메인 워터</h4>
+          <p>피부 관리 전후 피부 상태 안정화, 피부결 정돈에 사용하는 살롱 전문 케어 워터</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     8. CTA
+══════════════════════════════════════════════ -->
+<section id="cta">
+  <div class="container">
+    <div class="section-label center fade-in">Get Started</div>
+    <h2 class="fade-in">
+      지금, 피부를 리셋하세요
+    </h2>
+    <p class="fade-in">
+      속건조·트러블·붓기가 반복된다면<br>
+      딥디바 이중 수분 시스템으로 피부 사이클을 되돌릴 시간입니다
+    </p>
+    <a href="https://smartstore.naver.com/divamoon/products/5132147889"
+       class="btn-cta-large fade-in" target="_blank" rel="noopener">
+      구매하러 가기
+    </a>
+    <p class="cta-note fade-in">네이버 스마트스토어 · 딥디바</p>
+  </div>
+</section>
+
+<footer>
+  © 딥디바 Deep Diva · All rights reserved
+</footer>
+
+<script>
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
