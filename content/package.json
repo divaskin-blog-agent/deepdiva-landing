@@ -1,0 +1,14 @@
+{
+  "name": "divaskin-content",
+  "private": true,
+  "description": "디바스킨 카드뉴스·릴스 렌더러 (HTML → Playwright 캡처 → ffmpeg)",
+  "scripts": {
+    "cards": "node cardnews/render.js && node cardnews/sheet.js",
+    "reel": "node reel/audio.js && node reel/render.js full"
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "5.1.0",
+    "@fontsource/noto-sans-kr": "5.1.0",
+    "playwright-core": "1.48.2"
+  }
+}

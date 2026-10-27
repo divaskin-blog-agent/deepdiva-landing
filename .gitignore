@@ -1,2 +1,7 @@
 .DS_Store
 Thumbs.db
+node_modules/
+content/reel/frames/
+content/reel/probe/
+content/reel/audio.wav
+content/cardnews/*.zip

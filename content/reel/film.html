@@ -1,0 +1,167 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"DSans";font-weight:400;src:url(../node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-400-normal.woff2)}
+@font-face{font-family:"DSans";font-weight:700;src:url(../node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2)}
+@font-face{font-family:"DSans";font-weight:900;src:url(../node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-900-normal.woff2)}
+@font-face{font-family:"DLatin";font-weight:800;src:url(../node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2)}
+/* 디바스킨 브랜드: 화이트(피부) · 아쿠아(수분) · 골드(빛). 값은 content/brand.js와 같아요 */
+:root{--white:#FFFFFF;--aqua:#91D3E8;--deep:#0081B2;--gold:#FFEB00;--ink:#0D2B3A;--soft:#E6F6FB;--muted:#3D5966}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--white)}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"DSans";color:var(--ink);word-break:keep-all}
+mark{background:linear-gradient(transparent 58%,var(--gold) 58%);color:inherit;padding:0 6px}
+.scene{position:absolute;inset:0;padding:0 100px;display:flex;flex-direction:column;justify-content:center;z-index:2}
+.top{position:absolute;top:150px;left:100px;right:100px;display:flex;justify-content:space-between;align-items:center;font-size:30px;font-weight:700;color:var(--muted);z-index:5}
+.top .brand{display:flex;gap:18px;align-items:center}
+.top b{font-family:"DLatin";font-weight:800;letter-spacing:.26em;color:var(--deep);font-size:28px}
+#bgTint{position:absolute;inset:0;background:var(--soft)}
+.bub{position:absolute;border-radius:50%;background:var(--aqua)}
+.spark{position:absolute;background:var(--gold);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);z-index:3}
+.pill{display:inline-block;align-self:flex-start;background:var(--deep);color:#fff;font-weight:700;font-size:42px;padding:18px 40px;border-radius:999px}
+.h1{font-weight:900;font-size:150px;line-height:1.2;letter-spacing:-.04em}
+.sub{font-size:52px;color:var(--muted);line-height:1.5}
+.h2{font-weight:900;font-size:120px;line-height:1.22;letter-spacing:-.03em}
+.hl{background:var(--soft);border-radius:40px;padding:56px 60px;font-size:62px;font-weight:700;line-height:1.45}
+.step{font-family:"DLatin";font-size:40px;font-weight:800;color:var(--deep);letter-spacing:.06em}
+.step span{font-family:"DSans";font-weight:900;letter-spacing:0}
+.stitle{font-weight:900;font-size:112px;line-height:1.2;letter-spacing:-.03em;margin:18px 0 70px}
+.item{display:flex;gap:40px;align-items:flex-start;background:var(--white);border:4px solid var(--soft);border-radius:40px;padding:44px 48px;margin-bottom:32px}
+.item .n{flex:none;width:96px;height:96px;border-radius:50%;background:var(--deep);color:#fff;font-family:"DLatin";font-size:44px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.item .t{font-size:58px;font-weight:700;line-height:1.3}
+.item .d{font-size:42px;color:var(--muted);margin-top:8px;line-height:1.4}
+.note{font-size:42px;color:var(--muted);margin-top:24px}
+#timer{position:absolute;left:100px;right:100px;top:1560px;z-index:4}
+#timer .lab{display:flex;justify-content:space-between;font-size:34px;font-weight:700;color:var(--muted);margin-bottom:18px}
+#timer .lab b{color:var(--deep)}
+#timer .bar{height:24px;border-radius:12px;background:var(--soft);overflow:hidden}
+#timer .fill{height:100%;width:0;background:var(--aqua);border-radius:12px;position:relative}
+#timer .fill::after{content:"";position:absolute;right:0;top:0;bottom:0;width:24px;border-radius:12px;background:var(--deep)}
+#flood{position:absolute;left:540px;top:960px;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--deep);z-index:6}
+#ctaDeco{position:absolute;inset:0;z-index:6;pointer-events:none}
+#ctaDeco .bub{background:#fff}
+#cta{z-index:7;color:#fff;align-items:center;text-align:center}
+.bm{width:120px;height:160px;background:#fff;clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%);margin-bottom:80px}
+.cline{font-weight:900;font-size:86px;line-height:1.38;letter-spacing:-.02em}
+.ask{font-size:50px;margin-top:110px;opacity:.92}
+.kw{margin-top:34px;background:var(--gold);color:var(--ink);font-size:72px;font-weight:900;padding:34px 70px;border-radius:999px}
+.shop{position:absolute;bottom:330px;left:0;right:0;display:flex;flex-direction:column;gap:10px;align-items:center}
+.shop b{font-family:"DLatin";font-weight:800;letter-spacing:.3em;font-size:36px}
+.shop span{font-size:38px;font-weight:700}
+</style></head>
+<body><div id="stage">
+  <div id="bgTint"></div>
+  <div id="hookDeco">
+    <div class="bub" id="b1" style="width:900px;height:900px;right:-320px;bottom:140px;opacity:.45"></div>
+    <div class="bub" id="b2" style="width:200px;height:200px;right:150px;bottom:820px;opacity:.6"></div>
+    <div class="bub" id="b3" style="width:80px;height:80px;left:140px;top:420px;opacity:.7"></div>
+    <div class="spark" data-tw="0" style="width:90px;height:90px;right:180px;top:380px"></div>
+    <div class="spark" data-tw="1.3" style="width:48px;height:48px;right:330px;top:540px"></div>
+    <div class="spark" data-tw="2.1" style="width:56px;height:56px;left:640px;bottom:520px"></div>
+  </div>
+  <div class="top" id="top"><span class="brand"><b>DIVASKIN</b>피부노트 · 붓기</span><span id="stepNo"></span></div>
+
+  <section class="scene" id="s1" data-s="0" data-e="2">
+    <span class="pill a" data-in="0.05">5분 셀프 순환 루틴</span>
+    <div class="h1" style="margin-top:70px"><div class="a" data-in="0.3">아침 붓기,</div><div class="a" data-in="0.65"><mark>5분</mark>이면 돼요</div></div>
+    <div class="sub a" data-in="1.1" style="margin-top:60px">저장해두고 매일 아침 따라 하세요</div>
+  </section>
+
+  <section class="scene" id="s2" data-s="2" data-e="4">
+    <div class="h2"><div class="a" data-in="2.05">붓기는</div><div class="a" data-in="2.3">살이 아니에요</div></div>
+    <div class="sub a" data-in="2.6" style="margin:50px 0 80px">자는 동안 움직임이 적고, 짠 음식·수면 부족이 겹치면 수분이 머물러요</div>
+    <div class="hl a" data-in="3.0">그래서 <mark>출구부터</mark> 열어주는 게 순서예요</div>
+  </section>
+
+  <section class="scene" id="s3" data-s="4" data-e="6.5">
+    <div class="step a" data-in="4.05">STEP 1 · <span>0–2분</span></div>
+    <div class="stitle a" data-in="4.2">출구 열기</div>
+    <div class="item a" data-in="4.5"><span class="n">1</span><div><div class="t">쇄골 위 오목한 곳</div><div class="d">손가락으로 가볍게 10번 누르기</div></div></div>
+    <div class="item a" data-in="5.5"><span class="n">2</span><div><div class="t">귀 밑 → 쇄골</div><div class="d">목 옆을 따라 10번 쓸어내리기</div></div></div>
+  </section>
+
+  <section class="scene" id="s4" data-s="6.5" data-e="9">
+    <div class="step a" data-in="6.55">STEP 2 · <span>2–4분</span></div>
+    <div class="stitle a" data-in="6.7">얼굴 순환</div>
+    <div class="item a" data-in="7.0"><span class="n">1</span><div><div class="t">턱 끝 → 귀 밑</div><div class="d">턱선을 따라 5번</div></div></div>
+    <div class="item a" data-in="7.5"><span class="n">2</span><div><div class="t">코 옆 → 관자놀이</div><div class="d">광대 아래를 따라 5번</div></div></div>
+    <div class="item a" data-in="8.0"><span class="n">3</span><div><div class="t">눈썹 위 → 관자놀이</div><div class="d">이마를 따라 5번</div></div></div>
+    <div class="note a" data-in="8.4">※ 압은 크림 바르듯 가볍게</div>
+  </section>
+
+  <section class="scene" id="s5" data-s="9" data-e="11">
+    <div class="step a" data-in="9.05">STEP 3 · <span>4–5분</span></div>
+    <div class="stitle a" data-in="9.2">종아리</div>
+    <div class="item a" data-in="9.5"><span class="n">1</span><div><div class="t">발목 → 무릎</div><div class="d">양손으로 감싸 쓸어올리기, 좌우 10번</div></div></div>
+    <div class="hl a" data-in="10.0" style="font-size:48px;margin-top:40px">저녁엔 짠 음식 줄이기 · 물은 조금씩 자주</div>
+  </section>
+
+  <div id="timer"><div class="lab"><span>0분</span><b id="tlab">출구 열기</b><span>5분</span></div><div class="bar"><div class="fill" id="fill"></div></div></div>
+
+  <div id="flood"></div>
+  <div id="ctaDeco">
+    <div class="bub" style="width:640px;height:640px;left:-220px;top:-120px;opacity:.10"></div>
+    <div class="bub" style="width:380px;height:380px;right:-120px;bottom:420px;opacity:.10"></div>
+    <div class="spark" data-tw="0.4" style="width:84px;height:84px;left:180px;top:420px"></div>
+    <div class="spark" data-tw="1.1" style="width:50px;height:50px;right:190px;top:560px"></div>
+    <div class="spark" data-tw="1.8" style="width:60px;height:60px;right:250px;bottom:560px"></div>
+  </div>
+  <section class="scene" id="cta" data-s="11" data-e="99">
+    <div class="bm a" data-in="11.4" data-drop="1"></div>
+    <div class="cline"><div class="a" data-in="11.7">이 영상 저장해두고</div><div class="a" data-in="12.0">내일 아침 따라 해보세요</div></div>
+    <div class="ask a" data-in="12.6">영상 루틴이 더 필요하시면 댓글에</div>
+    <div class="kw a" data-in="12.9" id="kw">'붓기' 남겨주세요</div>
+    <div class="shop a" data-in="13.2"><b>DIVASKIN</b><span>@diva_skin_official_</span></div>
+  </section>
+</div>
+<script>
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const outCubic = x => 1 - Math.pow(1 - x, 3);
+const outBack = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const scenes = [...document.querySelectorAll('.scene')];
+const $ = id => document.getElementById(id);
+const twinkle = (el, t) => { const ph = t * 1.6 + +el.dataset.tw; const s = 0.6 + 0.4 * Math.abs(Math.sin(ph * Math.PI));
+  el.style.transform = `scale(${s}) rotate(${ph * 20}deg)`; };
+
+window.seek = function (t) {
+  for (const s of scenes) {
+    const s0 = +s.dataset.s, s1 = +s.dataset.e;
+    const exitP = clamp((t - (s1 - 0.22)) / 0.22);
+    const vis = t >= s0 - 0.05 && t < s1 + 0.01;
+    s.style.display = vis ? 'flex' : 'none';
+    if (!vis) continue;
+    s.style.opacity = 1 - exitP;
+    s.style.transform = `translateY(${-90 * outCubic(exitP)}px)`;
+    for (const el of s.querySelectorAll('.a')) {
+      const p = clamp((t - +el.dataset.in) / 0.45), e = outCubic(p);
+      if (el.dataset.drop) { el.style.opacity = clamp(p * 3); el.style.transform = `translateY(${(1 - outBack(p)) * -160}px)`; }
+      else { el.style.opacity = e; el.style.transform = `translateY(${(1 - e) * 70}px)`; }
+    }
+  }
+  // 훅: 아쿠아 바탕과 물방울이 떠오르고, 2초 이후 흰 바탕으로
+  const hookOut = 1 - clamp((t - 1.8) / 0.3);
+  $('bgTint').style.opacity = hookOut;
+  $('hookDeco').style.opacity = hookOut;
+  $('hookDeco').style.display = hookOut > 0 ? 'block' : 'none';
+  $('b1').style.transform = `scale(${0.85 + 0.15 * outCubic(clamp(t / 1.5))})`;
+  $('b2').style.transform = `translateY(${-40 * t}px)`;
+  $('b3').style.transform = `translateY(${-60 * t}px)`;
+  document.querySelectorAll('#hookDeco .spark, #ctaDeco .spark').forEach(el => twinkle(el, t));
+  $('stepNo').textContent = t < 4 ? '' : t < 6.5 ? '01 / 03' : t < 9 ? '02 / 03' : t < 11 ? '03 / 03' : '';
+  // 5분 진행 바
+  const tv = t >= 3.9 && t < 11.05;
+  $('timer').style.opacity = tv ? clamp((t - 3.9) / 0.3) * (1 - clamp((t - 10.8) / 0.25)) : 0;
+  let fill = 0;
+  if (t >= 4) fill = t < 6.5 ? 40 * outCubic(clamp((t - 4.3) / 2)) : t < 9 ? 40 + 40 * outCubic(clamp((t - 6.8) / 2)) : 80 + 20 * outCubic(clamp((t - 9.3) / 1.4));
+  $('fill').style.width = Math.max(fill, 2.5) + '%';
+  $('tlab').textContent = t < 6.5 ? '출구 열기' : t < 9 ? '얼굴 순환' : '종아리';
+  // CTA: 딥 아쿠아가 화면 끝까지 퍼짐
+  const fp = outCubic(clamp((t - 10.95) / 0.5));
+  $('flood').style.transform = `scale(${fp * 230})`;
+  $('flood').style.display = t >= 10.95 ? 'block' : 'none';
+  $('ctaDeco').style.opacity = clamp((t - 11.3) / 0.4);
+  $('top').style.opacity = 1 - clamp((t - 10.95) / 0.2);
+  if (t > 13.4) { const ph = ((t - 13.5) % 1 + 1) % 1; $('kw').style.transform = `scale(${1 + Math.exp(-ph * 6) * 0.06})`; }
+};
+seek(0);
+</script></body></html>
